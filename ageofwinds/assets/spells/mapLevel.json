@@ -1,0 +1,16 @@
+{
+  "spell": {
+    "type": "misc",
+    "name": "Map Level",
+    "description": "Show the entire level",
+    "attributes": {
+      "icon": "60",
+      "lineOfSight": "false",
+      "targetRequired": "false"
+    },
+    "actions": [
+      "exploreAll"
+    ]
+  }
+}
+

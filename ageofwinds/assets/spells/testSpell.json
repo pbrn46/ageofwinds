@@ -1,0 +1,18 @@
+{
+  "spell": {
+    "type": "misc",
+    "name": "Test Spell",
+    "description": "For all your testing needs.",
+    "attributes": {
+      "icon": "20",
+      "lineOfSight": "true",
+      "targetRequired": "true"
+    },
+    "actions": [
+      "exploreAll",
+      "unexploreAll"
+    ]
+
+  }
+}
+

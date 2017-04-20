@@ -1,0 +1,17 @@
+{
+  "spell": {
+    "type": "misc",
+    "name": "Map Segment",
+    "description": "Map part of the level.",
+    "attributes": {
+      "icon": "60",
+      "lineOfSight": "false",
+      "targetRequired": "true",
+      "segmentRadius": "5"
+    },
+    "actions": [
+      "exploreSegment"
+    ]
+  }
+}
+

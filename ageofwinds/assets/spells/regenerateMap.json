@@ -1,0 +1,16 @@
+{
+  "spell": {
+    "type": "misc",
+    "name": "Regenerate Map",
+    "description": "Regenerate the entire level",
+    "attributes": {
+      "icon": "50",
+      "lineOfSight": "false",
+      "targetRequired": "false"
+    },
+    "actions": [
+      "regenerateMap"
+    ]
+  }
+}
+
