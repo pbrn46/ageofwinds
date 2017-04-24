@@ -19,17 +19,20 @@ class MapGenerator:
         self.mapLayer = {}
         self.startPos = None
         self.size = QSize(0, 0)
+        self.generator_pos = QPoint(0,0)
+        self.prev_generator_direction = None
+        self.prev_generator_type = None
 
     def new_map(self, size):
         self.size = size
         self.__generate_all()
-        # self.__debugPrint()
         return self.mapLayer
 
     def __generate_all(self):
         self.__blank_map()
 
-        self.startPos = QPoint(random.randint(0, self.size.width() -1), random.randint(0, self.size.height() - 1))
+        self.generator_pos = QPoint(random.randint(0, self.size.width() -1), random.randint(0, self.size.height() - 1))
+        self.startPos = self.generator_pos
 
         """
         Generator Rules
@@ -40,25 +43,21 @@ class MapGenerator:
         
         """
 
-        ret_pos = self.__add_random_path(self.startPos)
-        ret_pos = self.__add_random_path(ret_pos)
-        ret_pos = self.__add_random_path(ret_pos)
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
 
         # TODO: DEBUG Make a generator script
-        ret_pos = self.__add_path(ret_pos, Direction.Down, 10)
-        ret_pos = self.__add_path(ret_pos, Direction.Right, 5)
-        ret_pos = self.__add_path(ret_pos, Direction.DownRight, 5)
-        ret_pos = self.__add_path(ret_pos, Direction.Down, 3)  # After each diagonal, we must follow with a couple straight
-        ret_pos = self.__add_path(ret_pos, Direction.DownLeft, 5)
-        ret_pos = self.__add_path(ret_pos, Direction.Down, 3)
-        ret_pos = self.__add_path(ret_pos, Direction.Right, 10)
-        ret_pos = self.__add_path(ret_pos, Direction.UpRight, 5)
-        ret_pos = self.__add_path(ret_pos, Direction.Up, 3)
-        ret_pos = self.__add_path(ret_pos, Direction.UpLeft, 5)
-        ret_pos = self.__add_door(GameUtil.transpose(ret_pos, Direction.Up))
-        ret_pos = GameUtil.transpose(ret_pos, Direction.Left, 4)
-        ret_pos = GameUtil.transpose(ret_pos, Direction.Up, 5)
-        ret_pos = self.__check_room_clearance(MapGenerator.RoomType_Rectangle, ret_pos, QSize(8, 5), True)
+        self.generator_pos = self.__add_door(GameUtil.transpose(self.generator_pos, Direction.Up))
+        self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Left, 4)
+        self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Up, 5)
+        self.generator_pos = self.__check_room_clearance(MapGenerator.RoomType_Rectangle, self.generator_pos, QSize(8, 5), True)
 
     def __get_size(self):
         """Calculate the actual size of the current map."""
@@ -72,8 +71,9 @@ class MapGenerator:
             for y in range(self.size.height()):
                 self.mapLayer[x, y] = MapTileTypes.Wall
 
-    def __set_tile(self, pos, tile_number):
-        self.mapLayer[pos.x(), pos.y()] = tile_number
+    def __set_tile(self, pos, tile_number, only_if_type=-1):
+        if (only_if_type == -1) or only_if_type == self.__get_tile(pos):
+            self.mapLayer[pos.x(), pos.y()] = tile_number
 
     def __get_tile(self, pos):
         return self.mapLayer[pos.x(), pos.y()]
@@ -109,66 +109,89 @@ class MapGenerator:
         r = random.randint(0, 7)
         return Direction.from_int(r)
 
-    def __add_random_path(self, start_pos):
+    def __add_random_path(self):
         """Generate a random path. Return end position (inclusive)."""
+        start_pos = self.generator_pos
+        end_pos = None
         valid_tries = 0
         valid_path = False
         direction = Direction.Left
-        length = 0
+        length = None
         while not valid_path:
             valid_path = True  # True until proven otherwise
             direction = self.__random_direction()
-            length = random.randint(1, 30)
+            if self.prev_generator_direction is not None:
+                # Prevent two diagonals in a row
+                while Direction.is_diagonal(direction) and Direction.is_diagonal(self.prev_generator_direction):
+                    direction = self.__random_direction()
+
+            length = random.randint(2, 30)
             end_pos = GameUtil.transpose(start_pos, direction, length - 1)
-            # Todo: Check that path does not intersect with any other openings / objects
             if end_pos.x() < 0:
                 valid_path = False
-            elif end_pos.x() >= self.size.width():
+            if end_pos.x() >= self.size.width():
                 valid_path = False
-            elif end_pos.y() < 0:
+            if end_pos.y() < 0:
                 valid_path = False
-            elif end_pos.y() >= self.size.height():
+            if end_pos.y() >= self.size.height():
                 valid_path = False
+            if valid_path:
+                if not self.__check_path_buildable(GameUtil.transpose(start_pos, direction, 1), direction, length - 1):
+                    valid_path = False
             valid_tries += 1
             if valid_tries > 100:  # If tried many times and still not valid, just stop.
                 break
 
         if valid_path:
-            return self.__add_path(start_pos, direction, length)
+            self.__add_path(start_pos, direction, length)
+            self.prev_generator_direction = direction
+            self.generator_pos = end_pos
+            return self.generator_pos
         else:
             return False
 
     def __update_diagonal_walls(self, pos, direction):
         if direction & Direction.Up and direction & Direction.Left:
-            self.__set_tile(GameUtil.transpose(pos, Direction.Down), MapTileTypes.DownLeftWall)
-            self.__set_tile(GameUtil.transpose(pos, Direction.Right), MapTileTypes.UpRightWall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Down), MapTileTypes.DownLeftWall, only_if_type=MapTileTypes.Wall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Right), MapTileTypes.UpRightWall, only_if_type=MapTileTypes.Wall)
         if direction & Direction.Up and direction & Direction.Right:
-            self.__set_tile(GameUtil.transpose(pos, Direction.Down), MapTileTypes.DownRightWall)
-            self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.UpLeftWall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Down), MapTileTypes.DownRightWall, only_if_type=MapTileTypes.Wall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.UpLeftWall, only_if_type=MapTileTypes.Wall)
         if direction & Direction.Down and direction & Direction.Left:
-            self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpLeftWall)
-            self.__set_tile(GameUtil.transpose(pos, Direction.Right), MapTileTypes.DownRightWall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpLeftWall, only_if_type=MapTileTypes.Wall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Right), MapTileTypes.DownRightWall, only_if_type=MapTileTypes.Wall)
         if direction & Direction.Down and direction & Direction.Right:
-            self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpRightWall)
-            self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.DownLeftWall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpRightWall, only_if_type=MapTileTypes.Wall)
+            self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.DownLeftWall, only_if_type=MapTileTypes.Wall)
 
-    def __check_path_clearance(self, start_pos, direction, length):
-        # TODO
-        pass
+    def __check_path_buildable(self, start_pos, direction, length):
+        """Check if proposed path is only on wall."""
+        cur_pos = start_pos
+        clear = True
+        for i in range(length):
+            if self.__get_tile(cur_pos) != MapTileTypes.Wall:
+                clear = False
+                break
+            for t in self.__get_surrounding_tiles(cur_pos):
+                if start_pos != cur_pos and t.get_tile_number() != MapTileTypes.Wall:
+                    clear = False
+            # if not self.__has_surrounding_clearance(cur_pos, start_pos):
+            #     clear = False
+            cur_pos = GameUtil.transpose(cur_pos, direction)
+        return clear
 
-    def __has_surrounding_clearance(self, pos, ignore_pos):
+    def __has_surrounding_clearance(self, pos, ignore_pos=None):
         """Returns true if adjacent tiles have a clearance"""
         # print([pos, wall_pos, prev_pos])
         st = self.__get_surrounding_tiles(pos)
+        self.game.model.log(str(st))
         for tile in st:
-            if not tile.pos == ignore_pos:
-                # print tile.pos
+            if ignore_pos is None or not tile.pos == ignore_pos:
                 if tile.isPassable:
                     return True
         return False
 
     def __get_surrounding_tiles(self, pos):
-
         pos_list = [QPoint(x, y) for x in xrange(pos.x() - 1, pos.x() + 2)
                     for y in xrange(pos.y() - 1, pos.y() + 2)
                     if (
@@ -194,6 +217,8 @@ class MapGenerator:
             for x in range(size.width()):
                 for y in range(size.height()):
                     pos = QPoint(start_pos.x() + x, start_pos.y() + y)
+                    if not self.__in_map_limits(pos):
+                        return False
                     tile = self.__get_tile(pos)
                     if tile != MapTileTypes.Wall:
                         if build_if_clear:
@@ -206,6 +231,19 @@ class MapGenerator:
         else:
             return True
 
+    def __in_map_limits(self, pos):
+        """Check if a point is within map limits"""
+        valid = True
+        if pos.x() < 0:
+            valid = False
+        if pos.x() >= self.size.width():
+            valid = False
+        if pos.y() < 0:
+            valid = False
+        if pos.y() >= self.size.height():
+            valid = False
+        return valid
+
     def __debug_print(self):
         s = ""
         for x in range(self.size.width()):
@@ -214,3 +252,4 @@ class MapGenerator:
                 s += '%03d' % tile_num + ","
             s += '\n'
         print s
+

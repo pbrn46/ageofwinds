@@ -43,15 +43,15 @@ class Spell:
         if action == "exploreAll":
             # TODO: Should this expose hidden items like doors and traps?
             self.game.view.worldMap.explore_all()
-        if action == "unexploreAll":
+        elif action == "unexploreAll":
             self.game.view.worldMap.unexplore_all()
-        if action == "exploreSegment":
+        elif action == "exploreSegment":
             # TODO: Should this expose hidden items like doors and traps?
             radius = self.get_attribute("segmentRadius")
             if radius:
                 radius = int(radius)
             self.game.view.worldMap.explore_segment(target_pos, radius)
-        if action == "regenerateMap":
+        elif action == "regenerateMap":
             self.game.view.worldMap.generate_map()
             self.game.view.worldMap.protagonist.set_pos(self.game.model.mapGenerator.startPos)
             self.game.view.worldMap.protagonist.ensure_visible()

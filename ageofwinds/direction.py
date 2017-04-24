@@ -31,6 +31,9 @@ class Direction:
         DownRight: "DownRight"
     }
 
+    def __init__(self):
+        pass
+
     @staticmethod
     def reverse(direction):
         if direction == Direction.Left:
@@ -58,3 +61,15 @@ class Direction:
     @staticmethod
     def to_string(direction):
         return Direction.Direction_Strings[direction]
+
+    @staticmethod
+    def is_diagonal(direction):
+        if direction == Direction.UpLeft:
+            return True
+        if direction == Direction.UpRight:
+            return True
+        if direction == Direction.DownLeft:
+            return True
+        if direction == Direction.DownRight:
+            return True
+        return False

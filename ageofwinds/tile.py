@@ -18,18 +18,18 @@ zValues:
 
 class Tile(object):
     # Enum for tile types. Also used for zValue
-    TypeTerrain = 0
-    TypeStructure = 2
-    TypeItem = 4
-    TypeMonster = 6
-    TypeProtagonist = 8
-    TypeProjectile = 10
+    CategoryTerrain = 0
+    CategoryStructure = 2
+    CategoryItem = 4
+    CategoryMonster = 6
+    CategoryProtagonist = 8
+    CategoryProjectile = 10
 
-    def __init__(self, game, tileNumber, pos, tileType):
+    def __init__(self, game, tileNumber, pos, tileCategory):
         self.game = game
         self.worldMap = self.game.view.worldMap
         self.tileNumber = -1
-        self.tileType = tileType
+        self.tileCategory = tileCategory
 
         self.isPassable = True
         self.stopBefore = False  # Stop before shift-run
@@ -63,12 +63,12 @@ class Tile(object):
         if self.gfxItem:
             self.worldMap.gfxScene.removeItem(self.gfxItem)
             del self.gfxItem
-        if self.tileType == Tile.TypeTerrain:
+        if self.tileCategory == Tile.CategoryTerrain:
             pix = self.game.view.tilePix[tile_number]
-        elif self.tileType == Tile.TypeProtagonist or self.tileType == Tile.TypeMonster:
+        elif self.tileCategory == Tile.CategoryProtagonist or self.tileCategory == Tile.CategoryMonster:
             pix = self.game.view.spritePix[tile_number]
         self.gfxItem = self.worldMap.gfxScene.addPixmap(pix)
-        self.gfxItem.setZValue(self.tileType)
+        self.gfxItem.setZValue(self.tileCategory)
 
     def set_pos(self, pos):
         self.pos = pos

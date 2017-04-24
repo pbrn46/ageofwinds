@@ -10,7 +10,7 @@ from mapTileTypes import MapTileTypes
 
 class MapTile(Tile):
     def __init__(self, game, tile_number, pos):
-        super(MapTile, self).__init__(game, tile_number, pos, Tile.TypeTerrain)
+        super(MapTile, self).__init__(game, tile_number, pos, Tile.CategoryTerrain)
         self.isPassable = True
         self.stopBefore = False  # Stop before shift-run
         self.stopOnTop = False  # Stop on top during shift-run

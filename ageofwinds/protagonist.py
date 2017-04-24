@@ -9,7 +9,7 @@ from sprite import Sprite
 class Protagonist(Sprite):
 
     def __init__(self, game, pos):
-        super(Protagonist, self).__init__(game, 230, pos, self.TypeProtagonist)
+        super(Protagonist, self).__init__(game, 230, pos, self.CategoryProtagonist)
         self.game.model.protagonist = self
 
         self.stats.set_current_hp(10)

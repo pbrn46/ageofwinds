@@ -1,7 +1,7 @@
 {
   "spell": {
-    "type": "misc",
-    "name": "Test Spell",
+    "type": "debug",
+    "name": "Debug: Test Spell",
     "description": "For all your testing needs.",
     "attributes": {
       "icon": "20",
