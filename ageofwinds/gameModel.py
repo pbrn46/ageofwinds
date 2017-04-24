@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
 
-from PySide.QtCore import *
-from PySide.QtGui import *
-
+from ageofwinds.map.mapGenerator import MapGenerator
 from gameTime import GameTime
 # from protagonist import Protagonist
 from spellList import SpellList
-from mapGenerator import MapGenerator
 
 
 class GameModel:

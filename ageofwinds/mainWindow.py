@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
-from PySide.QtCore import *
 from PySide.QtGui import *
 
+from ageofwinds.screens.screens import Screens
 from mainMenu import MainMenu
 from mainToolbar import MainToolbar
-from playWindow import PlayWindow
 from statusWindow import StatusWindow
 
 
@@ -28,13 +27,14 @@ class MainWindow(QMainWindow):
         self.layout.setSpacing(0)
         self.centralWidget.setLayout(self.layout)
 
+        self.screens = Screens(self.game)
+        self.layout.addWidget(self.screens)
+
         self.build_menu()
 
         self.toolbar = MainToolbar(self.game)
         self.addToolBar(self.toolbar)
-        # self.layout.addWidget(self.tool)
-        self.playWindow = PlayWindow(self.game)
-        self.layout.addWidget(self.playWindow)
+
         self.statusWindow = StatusWindow(self.game)
         self.layout.addWidget(self.statusWindow)
 

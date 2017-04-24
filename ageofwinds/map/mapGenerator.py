@@ -1,12 +1,11 @@
 import random
 
 from PySide.QtCore import *
-from PySide.QtGui import *
+from ageofwinds.map.mapTileTypes import MapTileTypes
 
-from direction import Direction
-from mapTile import MapTile
-from mapTileTypes import MapTileTypes
-from gameUtil import GameUtil
+from ageofwinds.direction import Direction
+from ageofwinds.gameUtil import GameUtil
+from ageofwinds.map.mapTile import MapTile
 
 
 class MapGenerator:

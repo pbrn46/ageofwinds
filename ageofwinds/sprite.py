@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-from PySide.QtCore import *
-from PySide.QtGui import *
-
-from tile import Tile
-from spriteStats import SpriteStats
+from ageofwinds.map.tile import Tile
 from gameUtil import GameUtil
+from spriteStats import SpriteStats
 
 
 class Sprite(Tile):

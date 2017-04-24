@@ -29,7 +29,7 @@ class GameView:
     def generate_view(self):
         self.mainWindow = MainWindow(self.game)
         self.set_world_map(
-            self.mainWindow.playWindow.worldMap)  # Set as soon as world map is created in WorldMap() class now.
+            self.mainWindow.screens.get_screen("play").worldMap)  # Set as soon as world map is created in WorldMap() class now.
         self.worldMap.protagonist.ensure_visible()
 
     def set_world_map(self, world_map):

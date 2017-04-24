@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-from PySide.QtCore import *
 from PySide.QtGui import *
 
-from worldMap import WorldMap
+from ageofwinds.map.worldMap import WorldMap
 
 
-class PlayWindow(QWidget):
+class PlayScreen(QWidget):
     def __init__(self, game, parent=None):
-        super(PlayWindow, self).__init__(parent)
+        super(PlayScreen, self).__init__(parent)
         self.game = game
 
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)

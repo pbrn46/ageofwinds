@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-import csv
-import time
 import math
+import time
 
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-from mapTile import MapTile
-from protagonist import Protagonist
+from ageofwinds.map.mapTile import MapTile
+from ageofwinds.protagonist import Protagonist
 
 
 class WorldMap(QWidget):
@@ -51,26 +50,6 @@ class WorldMap(QWidget):
         self.mapSize = size
 
     def generate_map(self):
-        # mapFile = open('test/testmap.csv', 'r')
-        # mapCsv = csv.reader(mapFile, delimiter=",")
-        # # self.mapLayer =
-        # itemCount = 0
-        # rowCount = 0
-        # colCount = 0
-        # for row in mapCsv:
-        #     colCount = 0
-        #     for item in row:
-        #         try:
-        #             item = int(item)
-        #         except ValueError:
-        #             item = 0
-        #         self.mapLayer[colCount, rowCount] = item
-        #         itemCount += 1
-        #         colCount += 1
-        #     rowCount += 1
-        # self.setMapSize(QSize(colCount, rowCount))
-
-        # TODO: DEBUG
         size = QSize(30, 20)
         self.mapLayer = self.game.model.mapGenerator.new_map(size)
         self.set_map_size(size)
@@ -78,20 +57,21 @@ class WorldMap(QWidget):
         for y in range(self.mapSize.height()):
             for x in range(self.mapSize.width()):
                 if (x, y) in self.mapLayer:
-                    tileNumber = self.mapLayer[x, y]
+                    tile_number = self.mapLayer[x, y]
                 else:
-                    tileNumber = 0
-                self.set_tile_number(QPoint(x, y), tileNumber)
+                    tile_number = 0
+                self.set_tile_number(QPoint(x, y), tile_number)
 
         self.explore_all()  # TODO: DEBUG Remove this
 
-    def generate_protagonist(self, startPos=None):
-        if startPos is None:
-            startPos = self.game.model.mapGenerator.startPos
-        self.protagonist = Protagonist(self.game, startPos)
+    def generate_protagonist(self, start_pos=None):
+        if start_pos is None:
+            start_pos = self.game.model.mapGenerator.startPos
+        self.protagonist = Protagonist(self.game, start_pos)
         # self.protagonist.ensureVisible()
 
     def eventFilter(self, widget, event):
+        super(WorldMap, self).eventFilter(widget, event)
         if event.type() == QEvent.KeyPress:
             if self.game.control.key_event(widget, event):
                 return True
@@ -109,10 +89,8 @@ class WorldMap(QWidget):
         y = math.floor(pxPos.y() / self.game.view.tileSize.height())
         return QPoint(x, y)
 
-    # setTileNumber()
-    # Update tile at location, or create if not exist
     def set_tile_number(self, pos, tileNumber):
-        tile = None
+        """Update tile at location, or create if not exist"""
         try:  # Check for existence of tile
             self.viewMatrix[pos.x(), pos.y()].set_tile_number(tileNumber)
         except KeyError:  # Create if tile does not exist

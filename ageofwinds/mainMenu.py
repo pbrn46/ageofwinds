@@ -19,13 +19,13 @@ class MainMenu(QMenuBar):
         self.inventoryAction = QAction('&Inventory', self)
         # inventoryAction.setShortcut('Ctrl+Q')
         self.inventoryAction.setStatusTip('Inventory')
-        # inventoryAction.triggered.connect(self.close)
+        self.inventoryAction.triggered.connect(self.action_inventory)
         self.addAction(self.inventoryAction)
 
         self.characterAction = QAction('&Character', self)
         # characterAction.setShortcut('Ctrl+Q')
         self.characterAction.setStatusTip('Character')
-        # characterAction.triggered.connect(self.close)
+        self.characterAction.triggered.connect(self.action_character)
         self.addAction(self.characterAction)
 
         self.spellMenu = self.addMenu('&Spells')
@@ -34,6 +34,18 @@ class MainMenu(QMenuBar):
 
     def action_quit(self):
         self.game.control.quit()
+
+    def action_inventory(self):
+        if self.game.view.mainWindow.screens.current_screen == "inventory":
+            self.game.view.mainWindow.screens.change_screen("play")
+        else:
+            self.game.view.mainWindow.screens.change_screen("inventory")
+
+    def action_character(self):
+        if self.game.view.mainWindow.screens.current_screen == "character":
+            self.game.view.mainWindow.screens.change_screen("play")
+        else:
+            self.game.view.mainWindow.screens.change_screen("character")
 
     def build_spell_menu(self):
         for i in range(10):

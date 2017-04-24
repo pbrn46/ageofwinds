@@ -9,6 +9,7 @@ from spell import Spell
 class SpellList(list):
 
     def __init__(self, game):
+        super(SpellList, self).__init__()
         self.game = game
 
         # DEBUG

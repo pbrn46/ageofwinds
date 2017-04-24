@@ -2,9 +2,8 @@
 
 
 from PySide.QtCore import *
-from PySide.QtGui import *
 
-from tile import Tile
+from ageofwinds.map.tile import Tile
 from mapTileTypes import MapTileTypes
 
 
