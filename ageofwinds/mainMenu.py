@@ -40,6 +40,7 @@ class MainMenu(QMenuBar):
             self.game.view.mainWindow.screens.change_screen("play")
         else:
             self.game.view.mainWindow.screens.change_screen("inventory")
+            self.game.view.mainWindow.screens["inventory"].inventory.tileSubWindowsVertical()
 
     def action_character(self):
         if self.game.view.mainWindow.screens.current_screen == "character":

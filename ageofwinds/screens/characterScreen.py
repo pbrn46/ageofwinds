@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from PySide.QtGui import *
+from PySide.QtCore import Qt
 
 
 class CharacterScreen(QWidget):
@@ -15,9 +16,14 @@ class CharacterScreen(QWidget):
         self.layout.setSpacing(0)
 
         self.title = QLabel("Character")
+        self.title.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        font = self.title.font()
+        font.setPointSize(18)
+        self.title.setFont(font)
+        self.title.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.title)
 
-        # self.worldMap = WorldMap(self.game)
-        # self.layout.addWidget(self.worldMap)
+        self.test_widget = QWidget()
+        self.layout.addWidget(self.test_widget)
 
         self.setLayout(self.layout)

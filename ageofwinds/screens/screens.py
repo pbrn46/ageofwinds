@@ -31,6 +31,9 @@ class Screens(QWidget):
 
         self.change_screen("play")
 
+    def __getitem__(self, item):
+        return self.get_screen(item)
+
     def get_screen(self, screen_name):
         if screen_name in self.screens:
             return self.screens[screen_name]
