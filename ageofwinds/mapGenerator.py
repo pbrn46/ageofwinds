@@ -31,8 +31,21 @@ class MapGenerator:
 
         self.startPos = QPoint(random.randint(0, self.size.width() -1), random.randint(0, self.size.height() - 1))
 
+        """
+        Generator Rules
+        Paths:
+            Max length: 50% of map
+        Rooms:
+            Max Size: 10x10
+        
+        """
+
+        ret_pos = self.__add_random_path(self.startPos)
+        ret_pos = self.__add_random_path(ret_pos)
+        ret_pos = self.__add_random_path(ret_pos)
+
         # TODO: DEBUG Make a generator script
-        ret_pos = self.__add_path(self.startPos, Direction.Down, 10)
+        ret_pos = self.__add_path(ret_pos, Direction.Down, 10)
         ret_pos = self.__add_path(ret_pos, Direction.Right, 5)
         ret_pos = self.__add_path(ret_pos, Direction.DownRight, 5)
         ret_pos = self.__add_path(ret_pos, Direction.Down, 3)  # After each diagonal, we must follow with a couple straight
@@ -92,6 +105,39 @@ class MapGenerator:
 
             pos = GameUtil.transpose(pos, direction)
 
+    def __random_direction(self):
+        r = random.randint(0, 7)
+        return Direction.from_int(r)
+
+    def __add_random_path(self, start_pos):
+        """Generate a random path. Return end position (inclusive)."""
+        valid_tries = 0
+        valid_path = False
+        direction = Direction.Left
+        length = 0
+        while not valid_path:
+            valid_path = True  # True until proven otherwise
+            direction = self.__random_direction()
+            length = random.randint(1, 30)
+            end_pos = GameUtil.transpose(start_pos, direction, length - 1)
+            # Todo: Check that path does not intersect with any other openings / objects
+            if end_pos.x() < 0:
+                valid_path = False
+            elif end_pos.x() >= self.size.width():
+                valid_path = False
+            elif end_pos.y() < 0:
+                valid_path = False
+            elif end_pos.y() >= self.size.height():
+                valid_path = False
+            valid_tries += 1
+            if valid_tries > 100:  # If tried many times and still not valid, just stop.
+                break
+
+        if valid_path:
+            return self.__add_path(start_pos, direction, length)
+        else:
+            return False
+
     def __update_diagonal_walls(self, pos, direction):
         if direction & Direction.Up and direction & Direction.Left:
             self.__set_tile(GameUtil.transpose(pos, Direction.Down), MapTileTypes.DownLeftWall)
@@ -105,6 +151,10 @@ class MapGenerator:
         if direction & Direction.Down and direction & Direction.Right:
             self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpRightWall)
             self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.DownLeftWall)
+
+    def __check_path_clearance(self, start_pos, direction, length):
+        # TODO
+        pass
 
     def __has_surrounding_clearance(self, pos, ignore_pos):
         """Returns true if adjacent tiles have a clearance"""
@@ -127,49 +177,6 @@ class MapGenerator:
                         (0 <= y < self.size.height())
                     )]
         tiles = [MapTile(self.game, self.mapLayer[item.x(), item.y()], item) for item in pos_list]
-
-        # tiles = []
-        #
-        # if pos.x() > 0:
-        #     # Left
-        #     get_pos = QPoint(pos.x() - 1, pos.y())
-        #     tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        #     if pos.y() > 0:
-        #         # Up Left
-        #         get_pos = QPoint(pos.x() - 1, pos.y() - 1)
-        #         tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        #     if pos.y() < self.size.height() - 1:
-        #         # Down Left
-        #         get_pos = QPoint(pos.x() - 1, pos.y() + 1)
-        #         tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        # if pos.x() < self.size.width() - 1:
-        #     # Right
-        #     get_pos = QPoint(pos.x() + 1, pos.y())
-        #     tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        #     if pos.y() > 0:
-        #         # Up Left
-        #         get_pos = QPoint(pos.x() + 1, pos.y() - 1)
-        #         tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        #     if pos.y() < self.size.height() - 1:
-        #         # Down Left
-        #         get_pos = QPoint(pos.x() + 1, pos.y() + 1)
-        #         tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        # if pos.y() > 0:
-        #     # Up
-        #     get_pos = QPoint(pos.x(), pos.y() - 1)
-        #     tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-        #
-        # if pos.y() < self.size.height() - 1:
-        #     # Down
-        #     get_pos = QPoint(pos.x(), pos.y() + 1)
-        #     tiles.append(MapTile(self.game, self.__get_tile(get_pos), get_pos))
-
         return tiles
 
     def __add_room(self, room_type, start_pos, size=None):
