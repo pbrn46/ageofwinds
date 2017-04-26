@@ -122,7 +122,6 @@ class GameControl:
         else:
             self.game.view.worldMap.gfxView.unsetCursor()
 
-    # TODO: Should be switched to startTargeting / stopTargeting, more generally?
     def start_user_cast_target(self, spell):
         # Can only start if no pending command
         if not self.isMouseTargeting:

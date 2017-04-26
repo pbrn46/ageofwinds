@@ -18,4 +18,3 @@ class EquipmentSectionSlot(QFrame):
         self.layout.addWidget(self.label)
 
         self.setFrameStyle(QFrame.Panel | QFrame.Sunken)
-        # self.setLineWidth(2)

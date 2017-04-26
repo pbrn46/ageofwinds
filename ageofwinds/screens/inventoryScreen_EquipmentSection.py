@@ -1,6 +1,7 @@
 from PySide.QtGui import *
 from ageofwinds.screens.inventoryScreen_EquipmentSectionSlot import EquipmentSectionSlot
 
+
 class EquipmentSection(QWidget):
     def __init__(self, game, parent=None):
         super(EquipmentSection, self).__init__(parent)
