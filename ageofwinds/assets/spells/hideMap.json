@@ -1,18 +1,16 @@
 {
   "spell": {
     "type": "debug",
-    "name": "Debug: Test Spell",
-    "description": "For all your testing needs.",
+    "name": "Debug: Hide map",
+    "description": "Hides entire map.",
     "attributes": {
       "icon": "20",
       "lineOfSight": "true",
-      "targetRequired": "true"
+      "targetRequired": "false"
     },
     "actions": [
-      "exploreAll",
       "unexploreAll"
     ]
 
   }
 }
-

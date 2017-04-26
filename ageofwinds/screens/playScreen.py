@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 from PySide.QtGui import *
+from PySide.QtCore import QEvent
 
-from ageofwinds.map.worldMap import WorldMap
+from ageofwinds.map.dungeonMap import DungeonMap
+from ageofwinds.screens.screen import Screen
 
 
-class PlayScreen(QWidget):
+class PlayScreen(Screen):
     def __init__(self, game, parent=None):
         super(PlayScreen, self).__init__(parent)
         self.game = game
@@ -15,7 +17,21 @@ class PlayScreen(QWidget):
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
-        self.worldMap = WorldMap(self.game)
-        self.layout.addWidget(self.worldMap)
+        self.dungeonMap = DungeonMap(self.game)
+        self.game.view.set_world_map(self.dungeonMap)  # Create shortcut to dungeonMap from game.view
+        self.layout.addWidget(self.dungeonMap)
 
         self.setLayout(self.layout)
+
+        self.dungeonMap.gfxView.installEventFilter(self)
+        self.dungeonMap.installEventFilter(self)
+        self.grabKeyboard()
+
+    def keyPressEvent(self, key_event):
+        if self.game.control.play_key_event(key_event):
+            return True
+
+    def mousePressEvent(self, mouse_event):
+        if self.game.control.play_mouse_event(mouse_event):
+            return True
+

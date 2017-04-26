@@ -15,7 +15,7 @@ class SpellList(list):
         # DEBUG
         tmp = Spell(game, "mapLevel")
         self.append(tmp)
-        tmp = Spell(game, "testSpell")
+        tmp = Spell(game, "hideMap")
         self.append(tmp)
         tmp = Spell(game, "mapSegment")
         self.append(tmp)

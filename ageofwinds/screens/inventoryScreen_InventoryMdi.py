@@ -39,6 +39,10 @@ class InventoryMdi(QMdiArea):
     def hide_bag_window(self, bag_index):
         self.bag_windows[bag_index].setVisible(False)
 
+    def refresh_bags(self):
+        for w in self.bag_windows:
+            w.refresh_item_widgets()
+
     def tileSubWindows(self, orientation=Qt.Vertical):
         """Tile subwindows.
         

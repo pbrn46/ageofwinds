@@ -10,9 +10,9 @@ from ageofwinds.map.mapTile import MapTile
 from ageofwinds.protagonist import Protagonist
 
 
-class WorldMap(QWidget):
+class DungeonMap(QWidget):
     def __init__(self, game, parent=None):
-        super(WorldMap, self).__init__(parent)
+        super(DungeonMap, self).__init__(parent)
         self.game = game
         self.game.view.set_world_map(self)
         start_time = time.time()
@@ -29,13 +29,10 @@ class WorldMap(QWidget):
 
         self.gfxScene = QGraphicsScene()  # Scene to hold graphics
         self.gfxView = QGraphicsView()  # View to show scene
-        # self.gfxView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # self.gfxView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.gfxView.setScene(self.gfxScene)
-        self.gfxView.installEventFilter(self)
         self.layout.addWidget(self.gfxView)
 
-        self.generate_map()
+        self.generate_map()  # Todo: Maps should be generated when entered upon.
 
         self.generate_protagonist()
 
@@ -70,16 +67,17 @@ class WorldMap(QWidget):
         self.protagonist = Protagonist(self.game, start_pos)
         # self.protagonist.ensureVisible()
 
-    def eventFilter(self, widget, event):
-        super(WorldMap, self).eventFilter(widget, event)
-        if event.type() == QEvent.KeyPress:
-            if self.game.control.key_event(widget, event):
-                return True
-        if event.type() == QEvent.MouseButtonPress:
-            if self.game.control.mouse_event(widget, event):
-                return True
-
-        return QWidget.eventFilter(self, widget, event)
+    #
+    # def eventFilter(self, widget, event):
+    #     super(DungeonMap, self).eventFilter(widget, event)
+    #     if event.type() == QEvent.KeyPress:
+    #         if self.game.control.play_key_event(widget, event):
+    #             return True
+    #     if event.type() == QEvent.MouseButtonPress:
+    #         if self.game.control.play_mouse_event(widget, event):
+    #             return True
+    #
+    #     return QWidget.eventFilter(self, widget, event)
 
     def pos_to_px(self, pos):
         return QPoint(pos.x() * self.game.view.tileSize.width(), pos.y() * self.game.view.tileSize.height())

@@ -79,7 +79,7 @@ class MapTile(Tile):
         pos = self.pos
         positions = []
 
-        map_size = self.game.view.worldMap.mapSize
+        map_size = self.game.view.dungeonMap.mapSize
         max_x = map_size.width() - 1
         max_y = map_size.height() - 1
 
@@ -93,7 +93,7 @@ class MapTile(Tile):
                     positions.append(QPoint(t_x, t_y))
 
         for each_pos in positions:
-            tile = self.worldMap.get_tile(each_pos)
+            tile = self.dungeonMap.get_tile(each_pos)
             tile.set_explored(True)
 
 

@@ -2,7 +2,6 @@
 
 import sys
 
-from PySide.QtCore import *
 from PySide.QtGui import *
 
 from game import Game
@@ -20,5 +19,6 @@ if __name__ == '__main__':
     game.set_model(model)
     game.set_view(view)
     game.set_control(control)
-    view.generate_view()
+    game.control.init_game()
+    game.control.begin_test_mode()  # TODO: Debug
     app.exec_()

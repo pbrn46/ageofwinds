@@ -1,4 +1,5 @@
 from PySide.QtGui import *
+from PySide.QtCore import QEvent, Qt
 
 from ageofwinds.screens.playScreen import PlayScreen
 from ageofwinds.screens.inventoryScreen import InventoryScreen
@@ -10,7 +11,7 @@ class Screens(QWidget):
     def __init__(self, game, parent=None):
         super(Screens, self).__init__(parent)
         self.game = game
-        self.current_screen = None
+        self.__current_screen = None
 
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
@@ -43,8 +44,27 @@ class Screens(QWidget):
     def change_screen(self, screen_name):
         for k, v in self.screens.iteritems():
             if k == screen_name:
+                was_visible = self.screens[k].isVisible()
                 self.screens[k].setVisible(True)
-                self.current_screen = k
+                if not was_visible:
+                    self.screens[k].grabKeyboard()
+                    self.screens[k].toggled(True)  # Call toggled slot if was visible but not anymore.
+                self.__current_screen = k
             else:
+                was_visible = self.screens[k].isVisible()
                 self.screens[k].setVisible(False)
+                if was_visible:
+                    self.screens[k].toggled(False)  # Call toggled slot if was visible but not anymore.
+
+    def toggle_screen(self, screen_name):
+        if self.current_screen_name() == screen_name:
+            self.change_screen("play")
+        else:
+            self.change_screen(screen_name)
+
+    def current_screen(self):
+        return self[self.__current_screen]
+
+    def current_screen_name(self):
+        return self.__current_screen
 

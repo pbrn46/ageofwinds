@@ -42,15 +42,6 @@ class MainWindow(QMainWindow):
 
         self.show()
 
-        # self.installEventFilter(self)
-
-    """
-    def eventFilter(self, widget, event):
-        if (event.type() == QEvent.KeyPress):
-            pass
-            return QWidget.eventFilter(self, widget, event)
-    """
-
     def build_menu(self):
         menu_bar = MainMenu(self.game)
         self.setMenuBar(menu_bar)

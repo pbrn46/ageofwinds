@@ -10,7 +10,7 @@ class GameView:
     def __init__(self, game):
         self.game = game
         self.mainWindow = None
-        self.worldMap = None  # Shortcut to world map
+        self.dungeonMap = None  # Shortcut to world map, assigned when created in playScren
 
         self.tilePix = []
         self.spritePix = []
@@ -28,12 +28,10 @@ class GameView:
 
     def generate_view(self):
         self.mainWindow = MainWindow(self.game)
-        self.set_world_map(
-            self.mainWindow.screens.get_screen("play").worldMap)  # Set as soon as world map is created in WorldMap() class now.
-        self.worldMap.protagonist.ensure_visible()
+        self.dungeonMap.protagonist.ensure_visible()
 
     def set_world_map(self, world_map):
-        self.worldMap = world_map
+        self.dungeonMap = world_map
 
     def load_pixmaps(self):
         for x in range(500):
@@ -46,3 +44,12 @@ class GameView:
             if not pix.isNull():
                 pix = pix.scaled(self.tileSize, transformMode=Qt.SmoothTransformation)
             self.spritePix.append(pix)
+
+    def change_screen(self, screen_name):
+        """Shortcut function to self.mainWindow.screens.change_screen()"""
+        self.mainWindow.screens.change_screen(screen_name)
+
+    def toggle_screen(self, screen_name):
+        """Shortcut function to self.mainWindow.screens.toggle_screen()"""
+        self.mainWindow.screens.toggle_screen(screen_name)
+

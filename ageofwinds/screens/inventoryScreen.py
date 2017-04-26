@@ -1,13 +1,19 @@
 #!/usr/bin/env python
 
 from PySide.QtGui import *
-from PySide.QtCore import Qt
+from PySide.QtCore import Qt, QEvent
+from ageofwinds.screens.screen import Screen
 from ageofwinds.screens.inventoryScreen_InventoryMdi import InventoryMdi
 from ageofwinds.screens.inventoryScreen_EquipmentSection import EquipmentSection
 
 
-class InventoryScreen(QWidget):
+class InventoryScreen(Screen):
     def __init__(self, game, parent=None):
+        """
+        
+        :param game: 
+        :param parent: 
+        """
         super(InventoryScreen, self).__init__(parent)
         self.game = game
 
@@ -38,4 +44,15 @@ class InventoryScreen(QWidget):
         self.layout2.addWidget(self.inventory, 0, 1)
         self.layout2.setColumnStretch(1, 50)
 
+    def keyPressEvent(self, key_event):
+        key = key_event.key()
+        if key == 16777216:  # Esc
+            self.game.view.change_screen("play")
+        else:  # If not handled, event to focused widget
+            self.focusWidget().keyPressEvent(key_event)
+        return super(InventoryScreen, self).keyPressEvent(key_event)
 
+    def toggled(self, visible_state):
+        if visible_state:
+            self.inventory.tileSubWindows()
+            self.inventory.refresh_bags()

@@ -42,19 +42,19 @@ class Spell:
     def handle_cast_actions(self, action, start_pos=QPoint(-1, -1), target_pos=QPoint(-1, -1)):
         if action == "exploreAll":
             # TODO: Should this expose hidden items like doors and traps?
-            self.game.view.worldMap.explore_all()
+            self.game.view.dungeonMap.explore_all()
         elif action == "unexploreAll":
-            self.game.view.worldMap.unexplore_all()
+            self.game.view.dungeonMap.unexplore_all()
         elif action == "exploreSegment":
             # TODO: Should this expose hidden items like doors and traps?
             radius = self.get_attribute("segmentRadius")
             if radius:
                 radius = int(radius)
-            self.game.view.worldMap.explore_segment(target_pos, radius)
+            self.game.view.dungeonMap.explore_segment(target_pos, radius)
         elif action == "regenerateMap":
-            self.game.view.worldMap.generate_map()
-            self.game.view.worldMap.protagonist.set_pos(self.game.model.mapGenerator.startPos)
-            self.game.view.worldMap.protagonist.ensure_visible()
+            self.game.view.dungeonMap.generate_map()
+            self.game.view.dungeonMap.protagonist.set_pos(self.game.model.mapGenerator.startPos)
+            self.game.view.dungeonMap.protagonist.ensure_visible()
 
     def load_spell(self, spell_file):
         self.load_from_file("assets/spells/%s.json" % spell_file)

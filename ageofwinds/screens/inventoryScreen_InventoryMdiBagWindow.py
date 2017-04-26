@@ -21,9 +21,6 @@ class InventoryMdiBagWindow(QMdiSubWindow):
         self.list_widget.setResizeMode(QListWidget.Adjust)
 
         self.item_widgets = []
-
-        if self.inventory_id == 0:  # TODO: Debug
-            self.game.model.inventory.load_sample_data()
         self.refresh_item_widgets()
 
     def mouseMoveEvent(self, event):
@@ -40,13 +37,16 @@ class InventoryMdiBagWindow(QMdiSubWindow):
         self.setVisible(False)
         self.game.view.mainWindow.screens["inventory"].inventory.tileSubWindows()
 
-    def refresh_item_widgets(self):
+    def clear_items(self):
         self.item_widgets = []
+        self.list_widget.clear()
+
+    def refresh_item_widgets(self):
+        self.clear_items()
         for item in self.game.model.inventory:
             if item.parent == self.inventory_id:
                 self.item_widgets.append(item)
 
-        self.list_widget.clear()
         for item in self.item_widgets:
             widget_item = QListWidgetItem()
             widget_item.setText(item.name)

@@ -1,4 +1,4 @@
-from inventorItem import InventoryItem
+from inventoryItem import InventoryItem
 
 
 class Inventory(list):
@@ -6,12 +6,12 @@ class Inventory(list):
         super(Inventory, self).__init__(seq)
         self.game = game
 
-    def load_sample_data(self):
-        for i in range(20):
-            item = InventoryItem()
-            self.append(item)
-            index = self.index(item)
-            item.name = "TestItem %s" % index
-            item.icon = self.game.view.spritePix[66 + i]
-            item.parent = 0
-
+    def create_item(self, name, sprite_id, parent=None):
+        """Create an item. Returns index of created item."""
+        item = InventoryItem()
+        self.append(item)
+        index = self.index(item)
+        item.name = name
+        item.icon = self.game.view.spritePix[sprite_id]
+        item.parent = parent
+        return index

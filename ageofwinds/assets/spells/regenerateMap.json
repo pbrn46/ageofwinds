@@ -1,7 +1,7 @@
 {
   "spell": {
-    "type": "misc",
-    "name": "Regenerate Map",
+    "type": "debug",
+    "name": "Debug: Regenerate Map",
     "description": "Regenerate the entire level",
     "attributes": {
       "icon": "50",

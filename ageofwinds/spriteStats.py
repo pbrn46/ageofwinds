@@ -4,23 +4,20 @@ from PySide.QtCore import *
 from PySide.QtGui import *
 
 
-class SpriteStats:
-
+class SpriteStats(dict):
     def __init__(self, game):
+        super(SpriteStats, self).__init__()
         self.game = game
-        self.currentHp = 0
-        self.currentMp = 0
-        self.maxHp = 0
-        self.maxMp = 0
+        self.__stats = {
+            "current_hp": 0,
+            "max_hp": 1,
+            "current_mp": 0,
+            "max_mp": 1
+        }
 
-    def set_current_hp(self, hp):
-        self.currentHp = hp
+    def __getitem__(self, item):
+        return self.__stats[item]
 
-    def set_current_mp(self, mp):
-        self.currentMp = mp
+    def __setitem__(self, key, value):
+        self.__stats[key] = value
 
-    def set_max_hp(self, hp):
-        self.maxHp = hp
-
-    def set_max_mp(self, mp):
-        self.maxMp = mp

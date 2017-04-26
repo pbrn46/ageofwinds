@@ -27,7 +27,7 @@ class Tile(object):
 
     def __init__(self, game, tileNumber, pos, tileCategory):
         self.game = game
-        self.worldMap = self.game.view.worldMap
+        self.dungeonMap = self.game.view.dungeonMap
         self.tileNumber = -1
         self.tileCategory = tileCategory
 
@@ -56,23 +56,23 @@ class Tile(object):
 
     def generate_tile(self, tile_number):
         pass
-        # self.setPixmap(self.worldMap.tilePix[tileNumber])
+        # self.setPixmap(self.dungeonMap.tilePix[tileNumber])
         # self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
 
     def update_pix(self, tile_number):
         if self.gfxItem:
-            self.worldMap.gfxScene.removeItem(self.gfxItem)
+            self.dungeonMap.gfxScene.removeItem(self.gfxItem)
             del self.gfxItem
         if self.tileCategory == Tile.CategoryTerrain:
             pix = self.game.view.tilePix[tile_number]
         elif self.tileCategory == Tile.CategoryProtagonist or self.tileCategory == Tile.CategoryMonster:
             pix = self.game.view.spritePix[tile_number]
-        self.gfxItem = self.worldMap.gfxScene.addPixmap(pix)
+        self.gfxItem = self.dungeonMap.gfxScene.addPixmap(pix)
         self.gfxItem.setZValue(self.tileCategory)
 
     def set_pos(self, pos):
         self.pos = pos
-        px_pos = self.worldMap.pos_to_px(pos)
+        px_pos = self.dungeonMap.pos_to_px(pos)
         self.gfxItem.setPos(px_pos.x(), px_pos.y())
 
     def get_pos(self):
@@ -87,8 +87,8 @@ class Tile(object):
 
     def get_center_global_pos_px(self):
         scene_pos = self.gfxItem.mapToScene(self.gfxItem.boundingRect().topLeft())
-        view_pos = self.game.view.worldMap.gfxView.mapFromScene(scene_pos)
-        global_pos = self.game.view.worldMap.gfxView.viewport().mapToGlobal(view_pos)
+        view_pos = self.game.view.dungeonMap.gfxView.mapFromScene(scene_pos)
+        global_pos = self.game.view.dungeonMap.gfxView.viewport().mapToGlobal(view_pos)
 
         tile_width = self.game.view.tileSize.width()
         tile_height = self.game.view.tileSize.height()
@@ -97,12 +97,12 @@ class Tile(object):
         return global_center_pos
 
     def ensure_visible(self):
-        if self.game.view.worldMap.gfxView:
+        if self.game.view.dungeonMap.gfxView:
             pos_px = self.get_center_view_pos_px()
-            self.game.view.worldMap.gfxView.ensureVisible(pos_px.x(), pos_px.y(), 1, 1, 100, 100)
+            self.game.view.dungeonMap.gfxView.ensureVisible(pos_px.x(), pos_px.y(), 1, 1, 100, 100)
 
     def center_on(self):
-        if self.game.view.worldMap.gfxView:
+        if self.game.view.dungeonMap.gfxView:
             pos_px = self.get_center_view_pos_px()
-            self.game.view.worldMap.gfxView.center_on(pos_px.x(), pos_px.y())
+            self.game.view.dungeonMap.gfxView.center_on(pos_px.x(), pos_px.y())
 

@@ -80,9 +80,8 @@ class StatusWindow(QWidget):
     def update_stats(self):
         stats = self.game.model.protagonist.stats
 
-        self.statsItems["hp"].setText("HP %s (%s)" % (stats.currentHp, stats.maxHp))
-        self.statsItems["mp"].setText("MP %s (%s)" % (stats.currentMp, stats.maxMp))
-        # self.statsItems["mp"] = QListWidgetItem("MP 0 (0)")
+        self.statsItems["hp"].setText("HP %s (%s)" % (stats["current_hp"], stats["max_hp"]))
+        self.statsItems["mp"].setText("MP %s (%s)" % (stats["current_mp"], stats["max_mp"]))
         # self.statsItems["lvl"] = QListWidgetItem("Level 1 (0/10)")
         self.statsItems["time"].setText("Time %s" % (self.game.model.gameTime.get_time_string()))
         # self.statsItems["loc"] = QListWidgetItem("Location")
@@ -94,12 +93,12 @@ class StatusWindow(QWidget):
     def check_stats(self):
         stats = self.game.model.protagonist.stats
 
-        if stats.currentHp == 0 or stats.currentHp / stats.maxHp < 0.25:
+        if stats["current_hp"] == 0 or stats["current_hp"] / stats["max_hp"] < 0.25:
             self.set_item_critical(self.statsItems["hp"])
         else:
             self.set_item_non_critical(self.statsItems["hp"])
 
-        if stats.currentMp == 0 or stats.currentMp / stats.maxMp < 0.25:
+        if stats["current_mp"] == 0 or stats["current_mp"] / stats["max_mp"] < 0.25:
             self.set_item_critical(self.statsItems["mp"])
         else:
             self.set_item_non_critical(self.statsItems["mp"])

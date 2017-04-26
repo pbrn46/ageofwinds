@@ -36,17 +36,10 @@ class MainMenu(QMenuBar):
         self.game.control.quit()
 
     def action_inventory(self):
-        if self.game.view.mainWindow.screens.current_screen == "inventory":
-            self.game.view.mainWindow.screens.change_screen("play")
-        else:
-            self.game.view.mainWindow.screens.change_screen("inventory")
-            self.game.view.mainWindow.screens["inventory"].inventory.tileSubWindows()
+        self.game.view.toggle_screen("inventory")
 
     def action_character(self):
-        if self.game.view.mainWindow.screens.current_screen == "character":
-            self.game.view.mainWindow.screens.change_screen("play")
-        else:
-            self.game.view.mainWindow.screens.change_screen("character")
+        self.game.view.toggle_screen("character")
 
     def build_spell_menu(self):
         for i in range(10):
