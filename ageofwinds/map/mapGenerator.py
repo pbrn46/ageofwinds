@@ -13,14 +13,18 @@ class MapGenerator:
     RoomType_Round = 1
     RoomType_Cross = 2
 
+    Up = 0
+    Down = 1
+
     def __init__(self, game):
         self.game = game
         self.mapLayer = {}
-        self.startPos = None
+        self.start_pos = None
         self.size = QSize(0, 0)
         self.generator_pos = QPoint(0,0)
         self.prev_generator_direction = None
         self.prev_generator_type = None
+        self.force_next_direction = False  # When true, next direction will follow previous direction
 
     def new_map(self, size):
         self.size = size
@@ -30,8 +34,8 @@ class MapGenerator:
     def __generate_all(self):
         self.__blank_map()
 
-        self.generator_pos = QPoint(random.randint(0, self.size.width() -1), random.randint(0, self.size.height() - 1))
-        self.startPos = self.generator_pos
+        self.generator_pos = QPoint(random.randint(1, self.size.width() - 2), random.randint(1, self.size.height() - 2))
+        self.start_pos = self.generator_pos
 
         """
         Generator Rules
@@ -39,24 +43,29 @@ class MapGenerator:
             Max length: 50% of map
         Rooms:
             Max Size: 10x10
-        
         """
 
+        self.__set_tile(self.generator_pos, MapTileTypes.Floor)
+        self.__add_random_path()
+        self.__add_random_stairs(MapGenerator.Down)
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_path()
+        self.__add_random_stairs(MapGenerator.Down)
         self.__add_random_path()
         self.__add_random_path()
         self.__add_random_path()
         self.__add_random_path()
         self.__add_random_path()
+        self.__add_random_door()
         self.__add_random_path()
-        self.__add_random_path()
-        self.__add_random_path()
-        self.__add_random_path()
+        self.__add_random_stairs(MapGenerator.Down)
 
         # TODO: DEBUG Make a generator script
-        self.generator_pos = self.__add_door(GameUtil.transpose(self.generator_pos, Direction.Up))
-        self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Left, 4)
-        self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Up, 5)
-        self.generator_pos = self.__check_room_clearance(MapGenerator.RoomType_Rectangle, self.generator_pos, QSize(8, 5), True)
+        # self.generator_pos = self.__add_door(GameUtil.transpose(self.generator_pos, Direction.Up))
+        # self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Left, 4)
+        # self.generator_pos = GameUtil.transpose(self.generator_pos, Direction.Up, 5)
+        # self.generator_pos = self.__check_room_clearance(MapGenerator.RoomType_Rectangle, self.generator_pos, QSize(8, 5), True)
 
     def __get_size(self):
         """Calculate the actual size of the current map."""
@@ -77,76 +86,103 @@ class MapGenerator:
     def __get_tile(self, pos):
         return self.mapLayer[pos.x(), pos.y()]
 
+    def __add_random_door(self):
+        """Put door in a random direction"""
+        for i in range(100):
+            direction = self.__random_direction(self.prev_generator_direction, no_diagonal=True)
+            pos = GameUtil.transpose(self.generator_pos, direction, 1)
+            if self.__in_map_limits(pos) and self.__check_buildable(pos):
+                self.__add_door(pos)
+                self.generator_pos = pos
+                self.prev_generator_direction = direction
+                break
+
     def __add_door(self, pos):
         self.__set_tile(pos, 8)
         return pos
 
+    def __add_random_stairs(self, up_down):
+        """Put stairs in a random direction"""
+        for i in range(100):  # Try a bunch of times
+            direction = self.__random_direction(self.prev_generator_direction, no_diagonal=True)
+            pos = GameUtil.transpose(self.generator_pos, direction, 1)
+            if self.__in_map_limits(pos) and self.__check_buildable(pos):
+                valid = True
+                self.__add_stairs(pos, up_down)
+                self.generator_pos = pos
+                self.prev_generator_direction = direction
+                break
+
+    def __add_stairs(self, pos, up_down):
+        """
+        
+        :param pos: 
+        :param up_down: MapGenerator.Up or MapGenerator.Down
+        :return: 
+        """
+        if up_down == MapGenerator.Down:
+            self.__set_tile(pos, 7)
+        elif up_down == MapGenerator.Up:
+            self.__set_tile(pos, 6)
+
     def __add_path(self, start_pos, direction, length):
         pos = start_pos
-        for i in range(length):
-            if 0 <= pos.x() < self.size.width() and 0 <= pos.y() < self.size.height():
-                self.__set_tile(pos, MapTileTypes.Floor)
+        if not self.__in_map_limits(pos):
+            return pos
 
+        for i in range(length):
             # Update previous adjacent tiles
-            if i > 0:
+            if i > 0:  # Do not place tile in starting pos
+                self.__set_tile(pos, MapTileTypes.Floor)
                 self.__update_diagonal_walls(pos, direction)
 
-            if i >= length - 1:
-                return pos
-            if direction & Direction.Up and pos.y() <= 0:
-                return pos
-            if direction & Direction.Down and pos.y() >= (self.size.height() - 1):
-                return pos
-            if direction & Direction.Left and pos.x() <= 0:
-                return pos
-            if direction & Direction.Right and pos.x() >= (self.size.width() - 1):
-                return pos
+            next_pos = GameUtil.transpose(pos, direction)
+            if self.__in_map_limits(next_pos):
+                pos = next_pos
+            else:
+                break
 
-            pos = GameUtil.transpose(pos, direction)
+        return pos
 
-    def __random_direction(self):
-        r = random.randint(0, 7)
-        return Direction.from_int(r)
+    def __random_direction(self, previous_direction=None, no_diagonal=False):
+        """Return a random direction. If previous_direction is set, it prevents returning reverse of that direction
+        
+        :param previous_direction: If set, this prevents returning reverse of this direction, and also prevents the
+            adjacent two directions.
+        :param no_diagonal: 
+        :return: 
+        """
+        r = Direction.random_direction(no_diagonal)
+        if previous_direction is not None:
+            near_directions = Direction.near_directions(Direction.reverse(previous_direction))
+            print Direction.reverse(r), near_directions
+            if r in near_directions:
+                r = self.__random_direction(previous_direction, no_diagonal)
+        return r
 
-    def __add_random_path(self):
+    def __add_random_path(self, no_diagonal=False):
         """Generate a random path. Return end position (inclusive)."""
         start_pos = self.generator_pos
-        end_pos = None
-        valid_tries = 0
-        valid_path = False
-        direction = Direction.Left
-        length = None
-        while not valid_path:
-            valid_path = True  # True until proven otherwise
-            direction = self.__random_direction()
-            if self.prev_generator_direction is not None:
+        # while True:
+        for i in range(100):
+            while True:
+                direction = self.__random_direction(self.prev_generator_direction, no_diagonal)
                 # Prevent two diagonals in a row
-                while Direction.is_diagonal(direction) and Direction.is_diagonal(self.prev_generator_direction):
-                    direction = self.__random_direction()
+                if not (Direction.is_diagonal(direction) and Direction.is_diagonal(self.prev_generator_direction)):
+                    break
 
             length = random.randint(2, 30)
             end_pos = GameUtil.transpose(start_pos, direction, length - 1)
-            if end_pos.x() < 0:
-                valid_path = False
-            if end_pos.x() >= self.size.width():
-                valid_path = False
-            if end_pos.y() < 0:
-                valid_path = False
-            if end_pos.y() >= self.size.height():
-                valid_path = False
-            if valid_path:
-                if not self.__check_path_buildable(GameUtil.transpose(start_pos, direction, 1), direction, length - 1):
-                    valid_path = False
-            valid_tries += 1
-            if valid_tries > 100:  # If tried many times and still not valid, just stop.
-                break
 
-        if valid_path:
-            self.__add_path(start_pos, direction, length)
-            self.prev_generator_direction = direction
-            self.generator_pos = end_pos
-            return self.generator_pos
+            if self.__in_map_limits(end_pos):
+                if self.__check_buildable(GameUtil.transpose(start_pos, direction, 1), direction, length - 1):
+                    self.__add_path(start_pos, direction, length)
+                    self.prev_generator_direction = direction
+                    self.force_next_direction = False
+                    self.generator_pos = end_pos
+                    return self.generator_pos
         else:
+            print "Too many tries."
             return False
 
     def __update_diagonal_walls(self, pos, direction):
@@ -163,7 +199,7 @@ class MapGenerator:
             self.__set_tile(GameUtil.transpose(pos, Direction.Up), MapTileTypes.UpRightWall, only_if_type=MapTileTypes.Wall)
             self.__set_tile(GameUtil.transpose(pos, Direction.Left), MapTileTypes.DownLeftWall, only_if_type=MapTileTypes.Wall)
 
-    def __check_path_buildable(self, start_pos, direction, length):
+    def __check_buildable(self, start_pos, direction=None, length=1):
         """Check if proposed path is only on wall."""
         cur_pos = start_pos
         clear = True
@@ -176,7 +212,8 @@ class MapGenerator:
                     clear = False
             # if not self.__has_surrounding_clearance(cur_pos, start_pos):
             #     clear = False
-            cur_pos = GameUtil.transpose(cur_pos, direction)
+            if direction is not None:
+                cur_pos = GameUtil.transpose(cur_pos, direction)
         return clear
 
     def __has_surrounding_clearance(self, pos, ignore_pos=None):
@@ -233,13 +270,13 @@ class MapGenerator:
     def __in_map_limits(self, pos):
         """Check if a point is within map limits"""
         valid = True
-        if pos.x() < 0:
+        if pos.x() < 1:
             valid = False
-        if pos.x() >= self.size.width():
+        if pos.x() >= self.size.width() - 1:
             valid = False
-        if pos.y() < 0:
+        if pos.y() < 1:
             valid = False
-        if pos.y() >= self.size.height():
+        if pos.y() >= self.size.height() - 1:
             valid = False
         return valid
 

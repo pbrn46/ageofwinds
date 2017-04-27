@@ -12,19 +12,6 @@ class Sprite(Tile):
         self.stats = SpriteStats(game)
         self.canOpenDoors = True  # TODO
 
-    # def move_command(self, direction, is_shift):
-    #     """Move command from user"""
-    #     targetPos = GameUtil.transpose(self.pos, direction)
-    #     self.move(targetPos)
-    #     if is_shift:
-    #         finished = False
-    #         while not finished:
-    #             targetPos = GameUtil.transpose(self.pos, direction)
-    #             if self.game.view.dungeonMap.is_stop_running_on_top(self.pos) \
-    #                     or self.game.view.dungeonMap.is_stop_running_before(targetPos):
-    #                 break
-    #             finished = not self.move(targetPos)
-
     def move(self, pos):
         """Move position"""
         if self.game.view.dungeonMap.is_passable_to(pos):

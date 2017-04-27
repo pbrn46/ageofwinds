@@ -6,6 +6,7 @@ from PySide.QtGui import *
 from sprite import Sprite
 from gameUtil import GameUtil
 
+
 class Protagonist(Sprite):
     def __init__(self, game, pos):
         super(Protagonist, self).__init__(game, 230, pos, self.CategoryProtagonist)

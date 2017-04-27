@@ -1,3 +1,4 @@
+import random
 
 
 class Direction:
@@ -10,16 +11,16 @@ class Direction:
     DownLeft = Down | Left
     DownRight = Down | Right
 
-    Direction_Ints = [
+    Direction_Ints = (  # Order is important!
         Left,
-        Up,
-        Right,
-        Down,
         UpLeft,
+        Up,
         UpRight,
-        DownLeft,
-        DownRight
-    ]
+        Right,
+        DownRight,
+        Down,
+        DownLeft
+    )
     Direction_Strings = {
         Left: "Left",
         Up: "Up",
@@ -59,6 +60,14 @@ class Direction:
         return Direction.Direction_Ints[direction_int]
 
     @staticmethod
+    def to_int(direction):
+        """Return direction from integer 0-7."""
+        try:
+            return Direction.Direction_Ints.index(direction)
+        except ValueError:
+            raise ValueError
+
+    @staticmethod
     def to_string(direction):
         return Direction.Direction_Strings[direction]
 
@@ -73,3 +82,29 @@ class Direction:
         if direction == Direction.DownRight:
             return True
         return False
+
+    @staticmethod
+    def near_directions(direction):
+        """Returns a list with the direction as well as the two adjacent directions."""
+        direction1 = direction
+
+        direction2 = Direction.to_int(direction) - 1
+        if direction2 < 0:
+            direction2 = 7
+        direction2 = Direction.from_int(direction2)
+
+        direction3 = Direction.to_int(direction) + 1
+        if direction3 > 7:
+            direction3 = 0
+        direction3 = Direction.from_int(direction3)
+
+        return [direction1, direction2, direction3]
+
+
+    @staticmethod
+    def random_direction(no_diagonal=False):
+        r = random.randint(0, 3 if no_diagonal else 7)
+        return [Direction.Left, Direction.Up, Direction.Right, Direction.Down,
+                Direction.UpLeft, Direction.UpRight, Direction.DownLeft, Direction.DownRight
+                ][r]
+

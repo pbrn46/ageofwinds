@@ -53,7 +53,7 @@ class Spell:
             self.game.view.dungeonMap.explore_segment(target_pos, radius)
         elif action == "regenerateMap":
             self.game.view.dungeonMap.generate_map()
-            self.game.view.dungeonMap.protagonist.set_pos(self.game.model.mapGenerator.startPos)
+            self.game.view.dungeonMap.protagonist.set_pos(self.game.model.mapGenerator.start_pos)
             self.game.view.dungeonMap.protagonist.ensure_visible()
 
     def load_spell(self, spell_file):

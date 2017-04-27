@@ -63,7 +63,7 @@ class DungeonMap(QWidget):
 
     def generate_protagonist(self, start_pos=None):
         if start_pos is None:
-            start_pos = self.game.model.mapGenerator.startPos
+            start_pos = self.game.model.mapGenerator.start_pos
         self.protagonist = Protagonist(self.game, start_pos)
         # self.protagonist.ensureVisible()
 
