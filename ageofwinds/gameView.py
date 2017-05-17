@@ -18,8 +18,8 @@ class GameView:
         self.tileSize = QSize(32, 32)
 
         # Check if view scaling is necessary (high DPI environments)
-        scrGeo = QApplication.desktop().screenGeometry()
-        if scrGeo.width() > 1920 or scrGeo.height() > 1200:
+        scr_geo = QApplication.desktop().screenGeometry()
+        if scr_geo.width() > 1920 or scr_geo.height() > 1200:
             self.tileSize = QSize(48, 48)
 
         # Tile size in px

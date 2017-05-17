@@ -7,14 +7,14 @@ from PySide.QtGui import *
 
 class Spell:
 
-    def __init__(self, game, spellFile=None):
+    def __init__(self, game, spell_file=None):
         self.game = game
-        self.spellFile = spellFile
+        self.spellFile = spell_file
         # self.spellName = "" # Should be retrieved by function
         self.json = None
 
-        if spellFile:
-            self.load_spell(spellFile)
+        if spell_file:
+            self.load_spell(spell_file)
 
     def cast(self, start_pos=QPoint(-1, -1), target_pos=QPoint(-1, -1)):
         """Cast a spell."""
@@ -60,8 +60,8 @@ class Spell:
         self.load_from_file("assets/spells/%s.json" % spell_file)
         self.spellFile = spell_file
 
-    def load_from_file(self, file):
-        f = open(file, 'r')
+    def load_from_file(self, file_name):
+        f = open(file_name, 'r')
         self.json = json.load(f)
 
     def get_attribute(self, attribute):

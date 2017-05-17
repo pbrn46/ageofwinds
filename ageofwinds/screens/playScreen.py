@@ -5,6 +5,7 @@ from PySide.QtCore import QEvent
 
 from ageofwinds.map.dungeonMap import DungeonMap
 from ageofwinds.screens.screen import Screen
+from ageofwinds.mainToolbar import MainToolbar
 
 
 class PlayScreen(Screen):
@@ -17,6 +18,11 @@ class PlayScreen(Screen):
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
+
+        self.toolbar = MainToolbar(self.game)
+        # self.addToolBar(self.toolbar)
+        self.layout.addWidget(self.toolbar)
+
         self.dungeonMap = DungeonMap(self.game)
         self.game.view.set_world_map(self.dungeonMap)  # Create shortcut to dungeonMap from game.view
         self.layout.addWidget(self.dungeonMap)
