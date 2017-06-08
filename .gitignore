@@ -1,0 +1,6 @@
+__pycache__/
+build/
+.idea/
+dist-py2exe/
+dist-pyinstaller/
+*.pyc
