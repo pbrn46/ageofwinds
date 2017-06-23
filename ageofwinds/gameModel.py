@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from ageofwinds.map.mapGenerator import MapGenerator
+from map.mapGenerator import MapGenerator
 from gameTime import GameTime
 from spellList import SpellList
 from inventory import Inventory

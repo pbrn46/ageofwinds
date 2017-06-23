@@ -1,7 +1,7 @@
 from PySide.QtGui import *
 from PySide.QtCore import *
 
-from ageofwinds.screens.inventoryScreen_InventoryMdiBagWindow import InventoryMdiBagWindow
+from screens.inventoryScreen_InventoryMdiBagWindow import InventoryMdiBagWindow
 
 
 class InventoryMdi(QMdiArea):

@@ -3,9 +3,9 @@
 from PySide.QtGui import *
 from PySide.QtCore import QEvent
 
-from ageofwinds.map.dungeonMap import DungeonMap
-from ageofwinds.screens.screen import Screen
-from ageofwinds.mainToolbar import MainToolbar
+from map.dungeonMap import DungeonMap
+from screens.screen import Screen
+from mainToolbar import MainToolbar
 
 
 class PlayScreen(Screen):

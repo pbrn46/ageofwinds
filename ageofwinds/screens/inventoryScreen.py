@@ -2,9 +2,9 @@
 
 from PySide.QtGui import *
 from PySide.QtCore import Qt, QEvent
-from ageofwinds.screens.screen import Screen
-from ageofwinds.screens.inventoryScreen_InventoryMdi import InventoryMdi
-from ageofwinds.screens.inventoryScreen_EquipmentSection import EquipmentSection
+from screens.screen import Screen
+from screens.inventoryScreen_InventoryMdi import InventoryMdi
+from screens.inventoryScreen_EquipmentSection import EquipmentSection
 
 
 class InventoryScreen(Screen):

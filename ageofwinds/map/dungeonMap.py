@@ -6,8 +6,8 @@ import time
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-from ageofwinds.map.mapTile import MapTile
-from ageofwinds.protagonist import Protagonist
+from map.mapTile import MapTile
+from protagonist import Protagonist
 
 
 class DungeonMap(QWidget):

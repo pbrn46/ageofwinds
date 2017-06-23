@@ -1,11 +1,11 @@
 import random
 
 from PySide.QtCore import *
-from ageofwinds.map.mapTileTypes import MapTileTypes
+from map.mapTileTypes import MapTileTypes
 
-from ageofwinds.direction import Direction
-from ageofwinds.gameUtil import GameUtil
-from ageofwinds.map.mapTile import MapTile
+from direction import Direction
+from gameUtil import GameUtil
+from map.mapTile import MapTile
 
 
 class MapGenerator:
@@ -74,6 +74,7 @@ class MapGenerator:
         return QSize(width, height)
 
     def __blank_map(self):
+        """Clear map, and fill with wall tiles."""
         self.mapLayer = {}
         for x in range(self.size.width()):
             for y in range(self.size.height()):
@@ -98,6 +99,7 @@ class MapGenerator:
                 break
 
     def __add_door(self, pos):
+        """Add a door at specified position."""
         self.__set_tile(pos, 8)
         return pos
 
@@ -115,10 +117,9 @@ class MapGenerator:
 
     def __add_stairs(self, pos, up_down):
         """
-        
-        :param pos: 
+        :param pos:
         :param up_down: MapGenerator.Up or MapGenerator.Down
-        :return: 
+        :return:
         """
         if up_down == MapGenerator.Down:
             self.__set_tile(pos, 7)
@@ -146,11 +147,10 @@ class MapGenerator:
 
     def __random_direction(self, previous_direction=None, no_diagonal=False):
         """Return a random direction. If previous_direction is set, it prevents returning reverse of that direction
-        
         :param previous_direction: If set, this prevents returning reverse of this direction, and also prevents the
             adjacent two directions.
-        :param no_diagonal: 
-        :return: 
+        :param no_diagonal:
+        :return:
         """
         r = Direction.random_direction(no_diagonal)
         if previous_direction is not None:

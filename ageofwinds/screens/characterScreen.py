@@ -3,7 +3,7 @@
 from PySide.QtGui import *
 from PySide.QtCore import Qt
 
-from ageofwinds.screens.screen import Screen
+from screens.screen import Screen
 
 
 class CharacterScreen(Screen):

@@ -2,7 +2,7 @@
 
 from PySide.QtGui import *
 
-from ageofwinds.screens.screens import Screens
+from screens import Screens
 from mainMenu import MainMenu
 from statusWindow import StatusWindow
 

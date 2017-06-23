@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from ageofwinds.map.tile import Tile
+from map.tile import Tile
 from gameUtil import GameUtil
 from spriteStats import SpriteStats
 

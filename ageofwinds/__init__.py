@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import sys
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from PySide.QtGui import *
 
@@ -9,8 +12,7 @@ from gameModel import GameModel
 from gameView import GameView
 from gameControl import GameControl
 
-
-if __name__ == '__main__':
+def run_main():
     app = QApplication(sys.argv)
     game = Game()
     model = GameModel(game)
@@ -22,3 +24,6 @@ if __name__ == '__main__':
     game.control.init_game()
     game.control.begin_test_mode()  # TODO: Debug
     app.exec_()
+
+if __name__ == '__main__':
+    run_main()

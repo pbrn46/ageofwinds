@@ -3,8 +3,8 @@
 
 from PySide.QtCore import *
 
-from ageofwinds.map.tile import Tile
-from mapTileTypes import MapTileTypes
+from map.tile import Tile
+from map.mapTileTypes import MapTileTypes
 
 
 class MapTile(Tile):

@@ -1,5 +1,5 @@
 from PySide.QtGui import *
-from ageofwinds.screens.inventoryScreen_EquipmentSectionSlot import EquipmentSectionSlot
+from screens.inventoryScreen_EquipmentSectionSlot import EquipmentSectionSlot
 
 
 class EquipmentSection(QWidget):
