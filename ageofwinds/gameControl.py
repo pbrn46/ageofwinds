@@ -120,7 +120,8 @@ class GameControl:
             self.set_key_mode(GameControl.KeyModeDoorOpen)
             return True
         else:
-            print(5, "Unhandled key: %s" % (event.key()))
+            # print(5, "Unhandled key: %s" % (event.key()))
+            self.game.model.log("Unhandled key: %s" % (event.key()))
 
         if direction:
             if self.keyMode == GameControl.KeyModeMove:

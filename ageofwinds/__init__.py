@@ -2,15 +2,13 @@
 
 import sys
 import os
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 from PySide.QtGui import *
-
 from game import Game
 from gameModel import GameModel
 from gameView import GameView
 from gameControl import GameControl
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def run_main():
     app = QApplication(sys.argv)

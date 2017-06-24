@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from PySide.QtGui import *
-from PySide.QtCore import QEvent
+from PySide.QtGui import QSizePolicy, QVBoxLayout
 
 from map.dungeonMap import DungeonMap
 from screens.screen import Screen
@@ -24,7 +23,10 @@ class PlayScreen(Screen):
         self.layout.addWidget(self.toolbar)
 
         self.dungeonMap = DungeonMap(self.game)
-        self.game.view.set_world_map(self.dungeonMap)  # Create shortcut to dungeonMap from game.view
+
+        # Create shortcut to dungeonMap from game.view
+        self.game.view.set_world_map(self.dungeonMap)
+
         self.layout.addWidget(self.dungeonMap)
 
         self.setLayout(self.layout)
@@ -40,4 +42,4 @@ class PlayScreen(Screen):
     def mousePressEvent(self, mouse_event):
         if self.game.control.play_mouse_event(mouse_event):
             return True
-
+        return False
