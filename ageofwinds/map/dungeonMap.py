@@ -18,7 +18,7 @@ class DungeonMap(QWidget):
         start_time = time.time()
 
         self.viewMatrix = {}
-        self.mapLayer = {}
+        self.map_layer = {}
         self.protagonist = None
 
         self.mapSize = None
@@ -47,14 +47,14 @@ class DungeonMap(QWidget):
         self.mapSize = size
 
     def generate_map(self):
-        size = QSize(30, 20)
-        self.mapLayer = self.game.model.mapGenerator.new_map(size)
+        size = QSize(50, 50)
+        self.map_layer = self.game.model.mapGenerator.new_map(size)
         self.set_map_size(size)
 
         for y in range(self.mapSize.height()):
             for x in range(self.mapSize.width()):
-                if (x, y) in self.mapLayer:
-                    tile_number = self.mapLayer[x, y]
+                if (x, y) in self.map_layer:
+                    tile_number = self.map_layer[x, y]
                 else:
                     tile_number = 0
                 self.set_tile_number(QPoint(x, y), tile_number)
@@ -63,7 +63,8 @@ class DungeonMap(QWidget):
 
     def generate_protagonist(self, start_pos=None):
         if start_pos is None:
-            start_pos = self.game.model.mapGenerator.start_pos
+            start_pos = self.game.model.mapGenerator.get_player_start_pos(
+                self.map_layer)
         self.protagonist = Protagonist(self.game, start_pos)
         # self.protagonist.ensureVisible()
 

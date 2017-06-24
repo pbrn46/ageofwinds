@@ -2,14 +2,22 @@ import random
 
 
 class Direction:
-    Left = 1 << 0
-    Up = 1 << 1
-    Right = 1 << 2
-    Down = 1 << 3
-    UpLeft = Up | Left
-    UpRight = Up | Right
-    DownLeft = Down | Left
-    DownRight = Down | Right
+    # Left = 1 << 0
+    # Up = 1 << 1
+    # Right = 1 << 2
+    # Down = 1 << 3
+    # UpLeft = Up | Left
+    # UpRight = Up | Right
+    # DownLeft = Down | Left
+    # DownRight = Down | Right
+    Left = (-1, 0)
+    Up = (0, -1)
+    Right = (1, 0)
+    Down = (0, 1)
+    UpLeft = (-1, -1)
+    UpRight = (1, -1)
+    DownLeft = (-1, 1)
+    DownRight = (1, 1)
 
     Direction_Ints = (  # Order is important!
         Left,
