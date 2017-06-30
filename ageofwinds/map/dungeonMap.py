@@ -3,13 +3,14 @@
 import math
 import time
 
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide.QtCore import QSize, QPoint
+from PySide.QtGui import QVBoxLayout, QGraphicsScene, QGraphicsView, QWidget
 
 from map.mapTile import MapTile
 from protagonist import Protagonist
 
 
+# More accurately, should this be called MapViewer?
 class DungeonMap(QWidget):
     def __init__(self, game, parent=None):
         super(DungeonMap, self).__init__(parent)
@@ -17,7 +18,9 @@ class DungeonMap(QWidget):
         self.game.view.set_world_map(self)
         start_time = time.time()
 
-        self.viewMatrix = {}
+        # Dict of tile objects
+        self.tileMatrix = {}
+        # Dict of MapTileType constants (numbers)
         self.map_layer = {}
         self.protagonist = None
 
@@ -27,12 +30,15 @@ class DungeonMap(QWidget):
         self.layout.setSpacing(0)
         self.setLayout(self.layout)
 
-        self.gfxScene = QGraphicsScene()  # Scene to hold graphics
-        self.gfxView = QGraphicsView()  # View to show scene
+        # Scene to hold graphics
+        self.gfxScene = QGraphicsScene()
+        # View to show scene
+        self.gfxView = QGraphicsView()
         self.gfxView.setScene(self.gfxScene)
         self.layout.addWidget(self.gfxView)
 
-        self.generate_map()  # Todo: Maps should be generated when entered upon.
+        # Todo: Maps should be generated when entered upon?
+        self.generate_map()
 
         self.generate_protagonist()
 
@@ -47,6 +53,7 @@ class DungeonMap(QWidget):
         self.mapSize = size
 
     def generate_map(self):
+        """Generate a new map"""
         size = QSize(50, 50)
         self.map_layer = self.game.model.mapGenerator.new_map(size)
         self.set_map_size(size)
@@ -81,7 +88,8 @@ class DungeonMap(QWidget):
     #     return QWidget.eventFilter(self, widget, event)
 
     def pos_to_px(self, pos):
-        return QPoint(pos.x() * self.game.view.tileSize.width(), pos.y() * self.game.view.tileSize.height())
+        return QPoint(pos.x() * self.game.view.tileSize.width(),
+                      pos.y() * self.game.view.tileSize.height())
 
     def px_to_pos(self, pxPos):
         x = math.floor(pxPos.x() / self.game.view.tileSize.width())
@@ -91,18 +99,18 @@ class DungeonMap(QWidget):
     def set_tile_number(self, pos, tileNumber):
         """Update tile at location, or create if not exist"""
         try:  # Check for existence of tile
-            self.viewMatrix[pos.x(), pos.y()].set_tile_number(tileNumber)
+            self.tileMatrix[pos.x(), pos.y()].set_tile_number(tileNumber)
         except KeyError:  # Create if tile does not exist
             tile = MapTile(self.game, tileNumber, pos)  # , gfxItem)
-            self.viewMatrix[pos.x(), pos.y()] = tile
+            self.tileMatrix[pos.x(), pos.y()] = tile
 
     def get_tile_number(self, pos):
-        return self.viewMatrix[pos.x(), pos.y()].get_tile_number()
+        return self.tileMatrix[pos.x(), pos.y()].get_tile_number()
 
     def get_tile(self, pos):
         """Get tile based on tile position"""
         try:
-            return self.viewMatrix[pos.x(), pos.y()]
+            return self.tileMatrix[pos.x(), pos.y()]
         except KeyError:
             return None
 
@@ -112,19 +120,19 @@ class DungeonMap(QWidget):
         return self.get_tile(pos)
 
     def is_passable_to(self, pos):
-        if (pos.x(), pos.y()) in self.viewMatrix:
-            if self.viewMatrix[pos.x(), pos.y()].isPassable:
+        if (pos.x(), pos.y()) in self.tileMatrix:
+            if self.tileMatrix[pos.x(), pos.y()].isPassable:
                 return True
         return False
 
     def is_stop_running_on_top(self, atPos):
-        if self.viewMatrix[atPos.x(), atPos.y()].stopOnTop:
+        if self.tileMatrix[atPos.x(), atPos.y()].stopOnTop:
             return True
         return False
 
     def is_stop_running_before(self, toPos):
-        if (toPos.x(), toPos.y()) in self.viewMatrix:
-            if self.viewMatrix[toPos.x(), toPos.y()].stopBefore:
+        if (toPos.x(), toPos.y()) in self.tileMatrix:
+            if self.tileMatrix[toPos.x(), toPos.y()].stopBefore:
                 return True
         return False
 

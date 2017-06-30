@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 
-from PySide.QtCore import *
-from PySide.QtGui import *
+from PySide.QtCore import QPoint
+from PySide.QtGui import QCursor
 
 
 """
@@ -27,6 +27,7 @@ class Tile(object):
 
     def __init__(self, game, tileNumber, pos, tileCategory):
         self.game = game
+        # TODO: Should life dungeonMap calls to dungeonMap itself
         self.dungeonMap = self.game.view.dungeonMap
         self.tileNumber = -1
         self.tileCategory = tileCategory

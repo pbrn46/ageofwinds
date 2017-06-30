@@ -10,4 +10,3 @@ class MapTileTypes:
     StairsDown = 7
     DoorClosed = 8
     DoorOpen = 9
-

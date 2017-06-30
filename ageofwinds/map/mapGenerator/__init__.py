@@ -1,6 +1,6 @@
 
 from PySide.QtCore import QPoint
-# from direction import Direction
+from direction import Direction
 # from gameUtil import GameUtil
 from map.mapTileTypes import MapTileTypes
 from map.mapGenerator.generatorUtil import GeneratorUtil
@@ -52,12 +52,36 @@ class MapGenerator:
         #     test_layer[key] = MapTileTypes.DoorClosed
         # gen_map = GeneratorUtil.overlay(gen_map, test_layer)
         # #
-        # -- slice_layer
+        # # -- slice_layer
+        # slice_pos = QPoint(6, 6)
         # test_layer = GeneratorUtil.slice_layer(
-        #     gen_map, QPoint(6, 6), Direction.Left)
+        #     gen_map, slice_pos, Direction.Up)
         # for key in test_layer:
         #     test_layer[key] = MapTileTypes.DoorClosed
+        # test_layer[
+        #     slice_pos.x(),
+        #     slice_pos.y()] = MapTileTypes.DoorOpen
         # gen_map = GeneratorUtil.overlay(gen_map, test_layer)
+        # #
+        # # -- get_nearest_tile_pos
+        # nearest_pos = QPoint(25, 25)
+        # test_layer = GeneratorUtil.slice_layer(
+        #     gen_map, nearest_pos, Direction.UpRight)
+        # nearest_layer = GeneratorUtil.get_nearest_tiles(
+        #     test_layer, nearest_pos, MapTileTypes.Floor)
+        # for key in nearest_layer:
+        #     nearest_layer[key] = MapTileTypes.DoorClosed
+        # nearest_layer[
+        #     nearest_pos.x(),
+        #     nearest_pos.y()] = MapTileTypes.DoorOpen
+        # gen_map = GeneratorUtil.overlay(gen_map, nearest_layer)
+        # #
+        # # -- get_room_walls
+        # walls = GeneratorUtil.get_room_walls(abs_rooms[0])
+        # for direction in walls:
+        #     wall = walls[direction]
+        #     for key in wall:
+        #         gen_map[key] = MapTileTypes.DoorClosed
 
         return gen_map
 
