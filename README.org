@@ -6,7 +6,8 @@
 
 A rogue dungeon crawler. Remake of the Windows 3.1 classic Caste of the Winds.
 
-This game is currently in the development stage, although some parts are playable.
+This game is currently in the development stage, although some parts are
+playable.
 
 * Installation
 TBA
@@ -20,6 +21,13 @@ TBA
 #+BEGIN_SRC sh
 python ageofwinds/__init__.py
 #+END_SRC
+
+* Contribution
+Currently this is only tested under Windows, but feel free to test and report
+issues with any other operating system.
+
+Python programmers can always send pull requests for any bugs or development.
+
 
 * License
 
